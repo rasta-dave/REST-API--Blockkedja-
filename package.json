@@ -1,0 +1,30 @@
+{
+  "name": "rest-api--blockkedja-",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "nodemon src/server.mjs",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rasta-dave/REST-API--Blockkedja-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rasta-dave/REST-API--Blockkedja-/issues"
+  },
+  "homepage": "https://github.com/rasta-dave/REST-API--Blockkedja-#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.1",
+    "vitest": "^3.1.4"
+  }
+}
