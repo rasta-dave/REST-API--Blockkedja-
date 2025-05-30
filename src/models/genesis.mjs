@@ -1,6 +1,8 @@
 export const GENESIS_BLOCK = {
-  timestamp: '01/01/2023',
-  lastHash: '0',
-  hash: '#1',
+  timestamp: 1,
   data: [],
+  hash: '#1',
+  lastHash: '#######',
+  nonce: 0,
+  difficulty: 0,
 };

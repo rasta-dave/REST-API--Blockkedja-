@@ -1,6 +1,12 @@
 import Storage from '../utilities/storage.mjs';
 import Blockchain from '../models/blockchain.mjs';
 import Block from '../models/block.mjs';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class BlockchainRepository {
   constructor() {
@@ -10,10 +16,23 @@ class BlockchainRepository {
 
   async initialize() {
     try {
+      const dataDir = path.join(__dirname, '..', '..', 'data');
+      await fs.mkdir(dataDir, { recursive: true });
+
       const data = await this.storage.readFromFile();
       if (data && data.length > 0) {
         this.blockchain = new Blockchain();
-        this.blockchain.chain = data;
+        this.blockchain.chain = data.map(
+          (blockData) =>
+            new Block({
+              timestamp: blockData.timestamp,
+              lastHash: blockData.lastHash,
+              hash: blockData.hash,
+              data: blockData.data,
+              nonce: blockData.nonce,
+              difficulty: blockData.difficulty,
+            })
+        );
       } else {
         this.blockchain = new Blockchain();
         await this.storage.writeToFile(this.blockchain.chain);
