@@ -1,44 +1,112 @@
-REST API (Blockkedja)
+# Blockchain REST API
 
-Inlämningsuppgift
-I den första inlämningen ska ni skapa en node.js applikation som ska efterlikna en blockkedje applikation. Valet av namn och syfte är upp till er själva.
+En Node.js blockchain-applikation med REST API som implementerar grundläggande blockchain-funktionalitet med Proof of Work mining.
 
-Godkänt krav
-Applikationen ska byggas som ett REST API med endpoints för att kunna skapa block i en blockkedja. Det ska dessutom gå att lista alla block i en blockkedja samt hämta ut ett valfritt block ur blockkedjan.
+## Funktioner
 
-Krav:
+- **Blockchain med Proof of Work** - Mining med konfigurerbar svårighetsgrad
+- **REST API** - Komplett API för blockchain-operationer
+- **Transaktionshantering** - Stöd för komplexa transaktionsobjekt
+- **Persistens** - Automatisk sparning till JSON-fil
+- **Validering** - Blockkedjeintegritet och proof-of-work verifiering
 
-Applikationen ska vara uppbyggd kring design mönstret MVC.
-Felhantering enligt “best practice” ska användas(det som vi gått igenom)
-Blockkedjan ska skrivas till en json fil så att den finns även efter omstart av servern.
-Loggning av fel ska skrivas till en fysisk fellogg
-ES6 moduler ska användas istället för CommonJS moduler.
-Skapandet av block ska ske test drivet(TDD)
-Varje block måste verifieras och valideras(“Proof Of Work”)
+## Installation
 
-Väl godkänt krav
-För väl godkänt ska data i blocket vara av typen “complex object”, det vill säga antingen en instans av en klass eller ett anonymt objekt.
-Centraliserad felhantering måste användas
-Centraliserad loggning av applikationen måste användas
+```bash
+# Klona projektet
+git clone <repository-url>
+cd REST-API--Blockkedja-
 
-Klient
+# Installera dependencies
+npm install
 
-Räcker med Postman
+# Skapa nödvändiga mappar
+mkdir -p data logs
 
-Inlämning
-Ska ske på itslearning som en zip fil samt en länk till ett GitHub repo som är tillgängligt för mig
+# Starta utvecklingsserver
+npm run dev
+```
 
-…………………………...
+## API Endpoints
 
-Inlämningsuppgiften examinerar följande läranderesultat från kursplanen:
+### Blockchain Operations
 
-API-utveckling med Node.js
-proof-of-work-baserade system
-skapa BackEnd Node.JS-servrar, med ett express-API och TDD
-VG-mål för uppgiften:
+```
+GET    /api/v1/blockchain           # Hämta hela blockkedjan
+GET    /api/v1/blockchain/:index    # Hämta specifikt block
+GET    /api/v1/blockchain/validate  # Validera kedjan
+POST   /api/v1/blockchain           # Skapa nytt block
+POST   /api/v1/blockchain/transaction  # Skapa transaktion
+```
 
-Den studerande har nått samtliga lärandemål för kursen. Den studerande kan dessutom:
+## Användning
 
-skapa blockchain-objekt som hanterar komplexa objekt
-förstå när du ska använda midleware och använda det på ett korrekt sätt
-Med högre kvalitet än för betyget G.
+### Hämta blockkedjan
+
+```bash
+curl http://localhost:3000/api/v1/blockchain
+```
+
+### Skapa transaktion
+
+```bash
+curl -X POST http://localhost:3000/api/v1/blockchain/transaction \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "Alice",
+    "to": "Bob",
+    "amount": 100,
+    "description": "Payment for services"
+  }'
+```
+
+### Skapa block med data
+
+```bash
+curl -X POST http://localhost:3000/api/v1/blockchain \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": {
+      "message": "Custom block data",
+      "type": "general"
+    }
+  }'
+```
+
+## Teknisk Implementation
+
+- **Arkitektur**: MVC pattern med Repository layer
+- **Mining**: SHA-256 Proof of Work algoritm
+- **Validering**: Blockchain integrity checks
+- **Felhantering**: Centraliserad error handling och loggning
+- **Testing**: TDD med 50+ tester (Vitest)
+- **Moduler**: ES6 modules (.mjs)
+
+## Scripts
+
+```bash
+npm start      # Produktionsläge
+npm run dev    # Utvecklingsläge (nodemon)
+npm test       # Kör alla tester
+```
+
+## Projektstruktur
+
+```
+src/
+├── models/           # Blockchain, Block, Transaction klasser
+├── controllers/      # API request handlers
+├── routes/          # Express routes
+├── repositories/    # Data persistence layer
+├── middleware/      # Error handling, logging
+└── utilities/       # Helper functions
+```
+
+## Miljövariabler
+
+Skapa `config/settings.env`:
+
+```
+NODE_ENV=development
+PORT=3000
+```

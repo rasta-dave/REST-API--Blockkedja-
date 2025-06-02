@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import Block from '../src/models/block.mjs';
 import { GENESIS_BLOCK } from '../src/models/genesis.mjs';
 import { createHash } from '../src/utilities/hash.mjs';
+import { isValidProofOfWork } from '../src/utilities/proof-of-work.mjs';
 
 describe('Block', () => {
   const timestamp = new Date().toString();
@@ -82,10 +83,19 @@ describe('Block', () => {
       expect(minedBlock.timestamp).not.toEqual(undefined);
     });
 
-    it('should create a SHA-256 hash based on agiven and correct input', () => {
-      expect(minedBlock.hash).toEqual(
-        createHash(minedBlock.timestamp, previousBlock.hash, data)
-      );
+    it('should create a valid proof-of-work hash', () => {
+      expect(minedBlock.hash.substring(0, 2)).toBe('00');
+      expect(minedBlock.nonce).toBeGreaterThan(0);
+      expect(
+        isValidProofOfWork(
+          minedBlock.timestamp,
+          previousBlock.hash,
+          data,
+          minedBlock.hash,
+          minedBlock.nonce,
+          minedBlock.difficulty
+        )
+      ).toBe(true);
     });
   });
 });

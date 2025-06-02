@@ -1,5 +1,5 @@
 import { GENESIS_BLOCK } from './genesis.mjs';
-import { createHash } from '../utilities/hash.mjs';
+import { mineBlock, isValidProofOfWork } from '../utilities/proof-of-work.mjs';
 
 export default class Block {
   constructor({ timestamp, lastHash, hash, data, nonce, difficulty }) {
@@ -18,14 +18,14 @@ export default class Block {
   static mineBlock({ previousBlock, data, difficulty = 2 }) {
     const timestamp = new Date().toString();
     const lastHash = previousBlock.hash;
-    const hash = createHash(timestamp, lastHash, data);
+    const { hash, nonce } = mineBlock(timestamp, lastHash, data, difficulty);
 
     return new this({
       timestamp,
       lastHash,
       hash,
       data,
-      nonce: 0,
+      nonce,
       difficulty,
     });
   }
@@ -33,8 +33,14 @@ export default class Block {
   isValid() {
     if (this.hash === '#1') return true;
 
-    const validHash = createHash(this.timestamp, this.lastHash, this.data);
-    return this.hash === validHash;
+    return isValidProofOfWork(
+      this.timestamp,
+      this.lastHash,
+      this.data,
+      this.hash,
+      this.nonce,
+      this.difficulty
+    );
   }
 
   toString() {
